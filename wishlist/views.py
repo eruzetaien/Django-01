@@ -22,7 +22,7 @@ def show_wishlist(request):
     context = {
     'list_barang': data_barang_wishlist,
     'nama': 'Muhammad Ruzain',
-    'last_login': request.COOKIES['last_login'],
+    'last_login': request.COOKIES["last_login"],
     }
     return render(request, "wishlist.html", context)
 

@@ -1,25 +1,77 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h5>Nama: <b>{{nama}}</b> </h5>
-<table>
-    <tr>
-    <th>Nama Barang</th>
-    <th>Harga Barang</th>
-    <th>Deskripsi</th>
-    </tr>
+<style>
+    table {
+        margin-top: 10px;
+    }
+    table, th, td{
+      vertical-align: top;
+      border: 1px solid;
+      padding: 5px;
+      text-align: center;
+    }
+    nav{
+      background-color: rgb(34, 34, 34);
+    }
+    a, h6 { 
+      color: white;
+      text-decoration: none;
+    }
+    .navbar-brand {
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius:10px;
+        color: white;
+    }
+    .navbar-brand:hover{
+        box-sizing: border-box;
+        padding: 10px;
+        background-color: azure;
+    }
+    body{
+        background-color: black;
+    }
+    thead{
+        background-color: black;
+    }
+
+    
+  
+</style>
+
+<nav class="navbar navbar-expand-lg ">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">{{nama}}</a>
+      <div class="navbar-nav">
+        <a href="{% url 'wishlist:logout' %}" class="btn btn-outline-light" role="button" aria-pressed="true">Logout</a>
+      </div>
+  </div>
+</nav>  
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th>Nama Barang</th>
+            <th>Harga Barang</th>
+            <th>Deskripsi</th>
+        </tr>
+    </thead>
+
     {% comment %} Tambahkan data di bawah baris ini {% endcomment %}
-    {% for barang in list_barang %}
+    <tbody>
+        {% for barang in list_barang %}
         <tr>
             <td>{{barang.nama_barang}}</td>
             <td>{{barang.harga_barang}}</td>
             <td>{{barang.deskripsi}}</td>
         </tr>
-    {% endfor %}
+        {% endfor %}
+    </tbody>    
 </table>
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
+<h6>Sesi terakhir login: {{ last_login }}</h6>
 
-<button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
+<!-- <button><a href="{% url 'wishlist:logout' %}">Logout</a></button> -->
 
 {% endblock content %}
