@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    table {
+        margin-top: 10px;
+    }
+    table, th, td{
+      vertical-align: top;
+      border: 1px solid;
+      padding: 5px;
+      text-align: center;
+    }
+    nav{
+      background-color: rgb(34, 34, 34);
+    }
+    a, h6 { 
+      color: white;
+      text-decoration: none;
+    }
+    .navbar-brand {
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius:10px;
+        color: white;
+    }
+    .navbar-brand:hover{
+        box-sizing: border-box;
+        padding: 10px;
+        background-color: azure;
+    }
+    body{
+      width: 100%;
+      background-color: black;
+    }
+    thead{
+        background-color: black;
+    }
+
+    .container-form {
+      margin: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .add-form {
+      border-radius: 10px;
+      padding: 10px 20px;
+      width: 30%;
+      background-color: rgb(255, 255, 255);
+    }
+
+    .tombol {
+      margin: 10px;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+      $.get("{% url 'wishlist:show_json' %}", function (data) {
+        $.each(data, function (index, value) {
+          $("#table-body").append(
+            "<tr><td>" +
+              value.fields.nama_barang +
+              "</td><td>" +
+              value.fields.harga_barang +
+              "</td><td>" +
+              value.fields.deskripsi +
+              "</td></tr>"
+          );
+        });
+      });
+  
+      $(document).on('submit',"#wishlist-form",function (e) {
+        e.preventDefault();
+
+        var nama_barang = $("#nama_barang").val();
+        var harga_barang = parseInt($("#harga_barang").val());
+        var deskripsi = $("#deskripsi").val();
+
+        $.ajax({
+          type: "POST",
+          url: "{% url 'wishlist:create_wishlist' %}",
+          data: {
+            nama_barang: nama_barang,
+            harga_barang: harga_barang,
+            deskripsi: deskripsi,
+			csrfmiddlewaretoken:$('input[name = csrfmiddlewaretoken]').val()
+          },
+          success: function (response) {
+            $("#table-wishlist").append(
+              "<tr><td>" +
+                nama_barang +
+                "</td><td>" +
+                harga_barang +
+                "</td><td>" +
+                deskripsi +
+                "</td></tr>"
+            );
+          },
+          error: function (error) {
+            console.log(error);
+          },
+        });
+      });
+    });
+  </script>
+<nav class="navbar navbar-expand-lg ">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">{{nama}}</a>
+      <div class="navbar-nav">
+        <a href="{% url 'wishlist:logout' %}" class="btn btn-outline-light" role="button" aria-pressed="true">Logout</a>
+      </div>
+  </div>
+</nav>  
+
+<table class="table table-dark table-striped" id="table-wishlist">
+    <thead>
+        <tr>
+            <th>Nama Barang</th>
+            <th>Harga Barang</th>
+            <th>Deskripsi</th>
+        </tr>
+    </thead>
+
+    <tbody id="table-body">
+
+    </tbody>
+</table>
+
+<div class="container-form">
+  <div class="add-form" >
+    <h2 class="d-flex justify-content-center ">Tambah Wishlist</h2>
+    <form method="POST" id="wishlist-form">
+      {% csrf_token %}
+  
+      <div class="form-group">
+         <label>Nama Barang</label>
+         <input id = "nama_barang" class="form-control" id="nama_barang" placeholder="Nama Barang"></input>
+       </div>
+       <div class="form-group">
+          <label>Harga Barang</label>
+          <input id = "harga_barang" class="form-control" id="harga_barang" placeholder="Harga Barang"></input>
+        </div>
+        <div class="form-group">
+          <label>Deskripsi</label>
+          <input id = "deskripsi" class="form-control" id="deskripsi" placeholder="Deskripsi"></input>
+        </div>
+        <div class="d-flex justify-content-center tombol">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+<h6>Sesi terakhir login: {{ last_login }}</h6>
+
+<!-- <button><a href="{% url 'wishlist:logout' %}">Logout</a></button> -->
+
+{% endblock content %}
